@@ -10,6 +10,13 @@ class FetchCharactersResult {
   FetchCharactersResult(this.characters);
 }
 
+class Authenticate extends Command {
+  final String username;
+  final String password;
+
+  Authenticate(this.username, this.password);
+}
+
 void main() async {
   var query = FetchCharacters();
 
@@ -25,9 +32,18 @@ void main() async {
     ]));
   });
 
-  var result = await charactersHandler.get(query);
+  var characters = await charactersHandler.get(query);
 
-  result.characters.forEach((element) {
+  characters.characters.forEach((element) {
     print(element);
   });
+
+  var command = Authenticate('alexei@starcourtmall.com', 'pa55w0rd');
+
+  var authenticationHandler = SimpleCommandHandler<Authenticate>((command) {
+    return Future.value(CommandResult.succeeded());
+  });
+
+  var result = await authenticationHandler.execute(command);
+  print('Login ${result.isSuccessful ? 'successful' : 'failed'}');
 }
