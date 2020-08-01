@@ -21,7 +21,7 @@ class StubCommandHandler implements CommandHandler<StubCommand> {
   @override
   Future<CommandResult> execute(StubCommand command) {
     return _shouldFail
-        ? Future.value(CommandResult.failed('Something went wrong'))
+        ? Future.value(CommandResult.failed(message: 'Something went wrong'))
         : Future.value(CommandResult.succeeded());
   }
 }

@@ -10,12 +10,10 @@ abstract class Command {}
 /// operation was successful.
 class CommandResult {
   final bool isSuccessful;
-  final String reason;
+  String message;
 
-  CommandResult._internal(this.isSuccessful, [this.reason]);
-
-  CommandResult.succeeded({this.reason}) : isSuccessful = true;
-  CommandResult.failed(this.reason) : isSuccessful = false;
+  CommandResult.succeeded({this.message}) : isSuccessful = true;
+  CommandResult.failed({this.message}) : isSuccessful = false;
 
   /// Returns this [CommandResult] as a completed [Future].
   Future<CommandResult> asFuture() {
