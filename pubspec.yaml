@@ -9,5 +9,5 @@ environment:
 dev_dependencies:
     test: ^1.9.4
     meta: ^1.1.8
-    pedantic: ^1.0.0
+    lints: ^1.0.1
     grinder: ^0.8.3
