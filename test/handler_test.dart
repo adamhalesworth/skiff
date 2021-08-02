@@ -1,19 +1,21 @@
 import 'dart:async';
 
-import 'package:skiff/src/commands.dart';
+import 'package:skiff/src/commands/command.dart';
+import 'package:skiff/src/commands/command_handler.dart';
+import 'package:skiff/src/commands/command_result.dart';
 import 'package:test/test.dart';
 
-class StubCommand extends Command {
+class StubCommand implements Command {
   final String username;
   final String password;
 
   StubCommand({this.username, this.password});
 
   @override
-  String toString() => '${username}, ${"*" * password.length}';
+  String toString() => '$username, ${"*" * password.length}';
 }
 
-class StubCommandHandler implements CommandHandler<StubCommand> {
+class StubHandler implements CommandHandler<StubCommand> {
   bool _shouldFail = false;
 
   void fail() => _shouldFail = true;
@@ -28,30 +30,25 @@ class StubCommandHandler implements CommandHandler<StubCommand> {
 
 void main() {
   StubCommand stubCommand;
-  StubCommandHandler sut;
+  StubHandler sut;
 
   setUp(() {
     stubCommand = StubCommand(username: 'jim.hop', password: 'h0pp3r');
-    sut = StubCommandHandler();
+    sut = StubHandler();
   });
 
-  group('StubCommandHandler', () {
+  group('StubHandler', () {
     test('.execute() returns successful result', () async {
-      // when
       var value = await sut.execute(stubCommand);
 
-      // then
       expect(value.isSuccessful, equals(true));
     });
 
     test('.execute() returns failed result', () async {
-      // given
       sut.fail();
 
-      // when
       var value = await sut.execute(stubCommand);
 
-      // then
       expect(value.isSuccessful, equals(false));
     });
   });
