@@ -4,3 +4,5 @@ export 'src/commands/command_result.dart';
 
 export 'src/queries/query.dart';
 export 'src/queries/query_handler.dart';
+
+export 'src/handler.dart' show FuncHandler;
