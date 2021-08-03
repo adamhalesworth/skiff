@@ -6,3 +6,5 @@ export 'src/queries/query.dart';
 export 'src/queries/query_handler.dart';
 
 export 'src/handler.dart' show FuncHandler;
+
+export 'src/mediator.dart';
