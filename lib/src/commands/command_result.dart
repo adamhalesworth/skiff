@@ -7,7 +7,7 @@ import 'dart:async';
 /// operation was successful.
 class CommandResult {
   final bool isSuccessful;
-  String message;
+  final String message;
 
   CommandResult.succeeded({this.message}) : isSuccessful = true;
   CommandResult.failed({this.message}) : isSuccessful = false;
