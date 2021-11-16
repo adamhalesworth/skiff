@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:skiff/skiff.dart';
 
-class FetchCharacters extends Query {}
+class FetchCharacters implements Query<FetchCharactersResult> {}
 
 class FetchCharactersResult {
   final List<String> characters;
@@ -10,7 +10,7 @@ class FetchCharactersResult {
   FetchCharactersResult(this.characters);
 }
 
-class Authenticate extends Command {
+class Authenticate implements Command {
   final String username;
   final String password;
 
@@ -18,10 +18,12 @@ class Authenticate extends Command {
 }
 
 void main() async {
+  var mediator = Mediator();
+
   var query = FetchCharacters();
 
   var charactersHandler =
-      SimpleQueryHandler<FetchCharacters, FetchCharactersResult>((command) {
+      FuncHandler<FetchCharacters, FetchCharactersResult>((command) {
     return Future.value(FetchCharactersResult([
       'Eleven',
       'Mike Wheeler',
@@ -32,18 +34,20 @@ void main() async {
     ]));
   });
 
-  var characters = await charactersHandler.get(query);
+  mediator.addHandler(charactersHandler);
 
-  characters.characters.forEach((element) {
-    print(element);
-  });
+  var characters = await mediator.dispatch(query);
+  characters.characters.forEach(print);
 
   var command = Authenticate('alexei@starcourtmall.com', 'pa55w0rd');
 
-  var authenticationHandler = SimpleCommandHandler<Authenticate>((command) {
+  var authenticationHandler =
+      FuncHandler<Authenticate, CommandResult>((command) {
     return Future.value(CommandResult.succeeded());
   });
 
-  var result = await authenticationHandler.execute(command);
+  mediator.addHandler(authenticationHandler);
+
+  var result = await mediator.dispatch<CommandResult>(command);
   print('Login ${result.isSuccessful ? 'successful' : 'failed'}');
 }
