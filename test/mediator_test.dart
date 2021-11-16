@@ -8,9 +8,9 @@ import 'package:test/test.dart';
 import 'handler_test.dart';
 
 void main() {
-  FuncHandler<StubCommand, CommandResult> stubCommandHandler;
+  FuncHandler<StubCommand, CommandResult>? stubCommandHandler;
 
-  Mediator sut;
+  Mediator? sut;
 
   setUp(() {
     stubCommandHandler = FuncHandler<StubCommand, CommandResult>(
@@ -22,12 +22,12 @@ void main() {
   group('Mediator', () {
     group('.addHandler', () {
       test('throws exception if handler already exists', () {
-        sut.addHandler<StubCommand>(stubCommandHandler);
+        sut!.addHandler<StubCommand>(stubCommandHandler!);
 
         const expectedMessage = 'A handler already exists for StubCommand';
 
         expect(
-            () => sut.addHandler<StubCommand>(stubCommandHandler),
+            () => sut!.addHandler<StubCommand>(stubCommandHandler!),
             throwsA(
               isA<AlreadyRegisteredException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -35,8 +35,8 @@ void main() {
       });
 
       test('adds a handler for the given request type', () {
-        sut.addHandler(stubCommandHandler);
-        expect(sut.handlers.length, 1);
+        sut!.addHandler(stubCommandHandler!);
+        expect(sut!.handlers.length, 1);
       });
     });
 
@@ -45,7 +45,7 @@ void main() {
         const expectedMessage = 'Missing required request type';
 
         expect(
-            () => sut.removeHandler(),
+            () => sut!.removeHandler(),
             throwsA(
               isA<RequestTypeMissingException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -56,7 +56,7 @@ void main() {
         const expectedMessage = 'Handler missing for StubCommand';
 
         expect(
-            () => sut.removeHandler<StubCommand>(),
+            () => sut!.removeHandler<StubCommand>(),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -64,12 +64,12 @@ void main() {
       });
 
       test('removes handler for the given request type', () {
-        sut.addHandler<StubCommand>(stubCommandHandler);
+        sut!.addHandler<StubCommand>(stubCommandHandler!);
 
-        var removedHandler = sut.removeHandler<StubCommand>();
+        var removedHandler = sut!.removeHandler<StubCommand>();
 
         expect(removedHandler, equals(stubCommandHandler));
-        expect(sut.handlers.length, 0);
+        expect(sut!.handlers.length, 0);
       });
     });
 
@@ -77,10 +77,10 @@ void main() {
       test('throws exception if handler is missing', () {
         const expectedMessage = 'Handler missing for StubCommand';
 
-        var stubCommand = StubCommand();
+        var stubCommand = StubCommand('empty', 'empty');
 
         expect(
-            () => sut.dispatch<CommandResult>(stubCommand),
+            () => sut!.dispatch<CommandResult>(stubCommand),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -88,9 +88,9 @@ void main() {
       });
 
       test('calls the handler and returns a response', () async {
-        sut.addHandler<StubCommand>(stubCommandHandler);
+        sut!.addHandler<StubCommand>(stubCommandHandler!);
 
-        var response = await sut.dispatch<CommandResult>(StubCommand());
+        var response = await sut!.dispatch<CommandResult>(StubCommand('', ''));
 
         expect(response.isSuccessful, isTrue);
       });

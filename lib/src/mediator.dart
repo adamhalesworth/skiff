@@ -26,25 +26,25 @@ class Mediator {
   }
 
   /// Removes a handler for the request type [R].
-  Handler removeHandler<R extends Request>() {
+  Handler<Request<dynamic>, dynamic> removeHandler<R extends Request>() {
     if (R == Request) {
       throw RequestTypeMissingException();
     }
 
-    _throwIfhandlerMissing(R);
+    _throwIfHandlerMissing(R);
 
-    return _handlers.remove(R);
+    return _handlers.remove(R)!;
   }
 
   /// Passes the given [request] to a registered handler and returns a response
   /// of type [Rs].
   Future<Rs> dispatch<Rs>(Request<Rs> request) async {
-    _throwIfhandlerMissing(request.runtimeType);
+    _throwIfHandlerMissing(request.runtimeType);
 
-    return await _handlers[request.runtimeType].execute(request);
+    return await _handlers[request.runtimeType]?.execute(request);
   }
 
-  void _throwIfhandlerMissing(Type requestType) {
+  void _throwIfHandlerMissing(Type requestType) {
     if (_handlers.containsKey(requestType)) {
       return;
     }

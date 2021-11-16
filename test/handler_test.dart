@@ -9,7 +9,7 @@ class StubCommand implements Command {
   final String username;
   final String password;
 
-  StubCommand({this.username, this.password});
+  StubCommand(this.username, this.password);
 
   @override
   String toString() => '$username, ${"*" * password.length}';
@@ -29,25 +29,25 @@ class StubHandler implements CommandHandler<StubCommand> {
 }
 
 void main() {
-  StubCommand stubCommand;
-  StubHandler sut;
+  StubCommand? stubCommand;
+  StubHandler? sut;
 
   setUp(() {
-    stubCommand = StubCommand(username: 'jim.hop', password: 'h0pp3r');
+    stubCommand = StubCommand('jim.hop', 'h0pp3r');
     sut = StubHandler();
   });
 
   group('StubHandler', () {
     test('.execute() returns successful result', () async {
-      var value = await sut.execute(stubCommand);
+      var value = await sut!.execute(stubCommand!);
 
       expect(value.isSuccessful, equals(true));
     });
 
     test('.execute() returns failed result', () async {
-      sut.fail();
+      sut!.fail();
 
-      var value = await sut.execute(stubCommand);
+      var value = await sut!.execute(stubCommand!);
 
       expect(value.isSuccessful, equals(false));
     });

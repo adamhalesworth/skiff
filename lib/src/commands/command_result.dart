@@ -9,8 +9,8 @@ class CommandResult {
   final bool isSuccessful;
   final String message;
 
-  CommandResult.succeeded({this.message}) : isSuccessful = true;
-  CommandResult.failed({this.message}) : isSuccessful = false;
+  CommandResult.succeeded({this.message = ''}) : isSuccessful = true;
+  CommandResult.failed({this.message = ''}) : isSuccessful = false;
 
   /// Returns this [CommandResult] as a completed [Future].
   Future<CommandResult> asFuture() {
