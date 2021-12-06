@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:skiff/src/exceptions.dart';
-import 'package:skiff/src/handler.dart';
-import 'package:skiff/src/request.dart';
+import 'exceptions.dart';
+import 'handler.dart';
+import 'request.dart';
 
 /// Promotes loose coupling between caller and callees.
 class Mediator {

@@ -2,18 +2,18 @@ import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CommandResult', () {
+  group('RequestResult', () {
     test('succeeded factory sets successful true', () {
-      expect(CommandResult.succeeded().isSuccessful, isTrue);
+      expect(RequestResult.succeeded().isSuccessful, isTrue);
     });
 
     test('failed factory sets successful false', () {
-      expect(CommandResult.failed().isSuccessful, isFalse);
+      expect(RequestResult.failed().isSuccessful, isFalse);
     });
 
     test('asFuture returns a completed future', () async {
       var commandFuture =
-          await CommandResult.failed(message: 'Something happened').asFuture();
+          await RequestResult.failed(message: 'Something happened').asFuture();
 
       expect(commandFuture.message, equals('Something happened'));
     });

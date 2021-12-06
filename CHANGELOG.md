@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+This version signals a change in the direction of this package.
+
+- Removes CQRS nomenclature and classes in favour of a cleaner API that doesn't model a specific pattern.
+
 ## 0.2.0
 
 ### Added

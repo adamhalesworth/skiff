@@ -1,20 +1,18 @@
 import 'dart:async';
 
 import 'package:skiff/skiff.dart';
-import 'package:skiff/src/exceptions.dart';
-import 'package:skiff/src/handler.dart';
 import 'package:test/test.dart';
 
 import 'handler_test.dart';
 
 void main() {
-  FuncHandler<StubCommand, CommandResult>? stubCommandHandler;
+  FuncHandler<StubCommand, RequestResult>? stubCommandHandler;
 
   Mediator? sut;
 
   setUp(() {
-    stubCommandHandler = FuncHandler<StubCommand, CommandResult>(
-        (c) => Future.value(CommandResult.succeeded()));
+    stubCommandHandler = FuncHandler<StubCommand, RequestResult>(
+        (c) => Future.value(RequestResult.succeeded()));
 
     sut = Mediator();
   });
@@ -80,7 +78,7 @@ void main() {
         var stubCommand = StubCommand('empty', 'empty');
 
         expect(
-            () => sut!.dispatch<CommandResult>(stubCommand),
+            () => sut!.dispatch<RequestResult>(stubCommand),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -90,7 +88,7 @@ void main() {
       test('calls the handler and returns a response', () async {
         sut!.addHandler<StubCommand>(stubCommandHandler!);
 
-        var response = await sut!.dispatch<CommandResult>(StubCommand('', ''));
+        var response = await sut!.dispatch(StubCommand('', ''));
 
         expect(response.isSuccessful, isTrue);
       });

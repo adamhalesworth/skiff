@@ -6,13 +6,8 @@
 /// objects with sound typing.
 library skiff;
 
-export 'src/commands/command.dart';
-export 'src/commands/command_handler.dart';
-export 'src/commands/command_result.dart';
-
-export 'src/queries/query.dart';
-export 'src/queries/query_handler.dart';
-
-export 'src/handler.dart' show FuncHandler;
-
+export 'src/handler.dart';
+export 'src/request.dart';
+export 'src/request_result.dart';
 export 'src/mediator.dart';
+export 'src/exceptions.dart';

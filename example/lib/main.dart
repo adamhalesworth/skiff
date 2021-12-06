@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:skiff/skiff.dart';
 
-class FetchCharacters implements Query<FetchCharactersResult> {}
+class FetchCharacters implements Request<FetchCharactersResult> {}
 
 class FetchCharactersResult {
   final List<String> characters;
@@ -10,7 +10,7 @@ class FetchCharactersResult {
   FetchCharactersResult(this.characters);
 }
 
-class Authenticate implements Command {
+class Authenticate implements Request<RequestResult> {
   final String username;
   final String password;
 
@@ -42,12 +42,12 @@ void main() async {
   var command = Authenticate('alexei@starcourtmall.com', 'pa55w0rd');
 
   var authenticationHandler =
-      FuncHandler<Authenticate, CommandResult>((command) {
-    return Future.value(CommandResult.succeeded());
+      FuncHandler<Authenticate, RequestResult>((command) {
+    return Future.value(RequestResult.succeeded());
   });
 
   mediator.addHandler(authenticationHandler);
 
-  var result = await mediator.dispatch<CommandResult>(command);
+  var result = await mediator.dispatch<RequestResult>(command);
   print('Login ${result.isSuccessful ? 'successful' : 'failed'}');
 }

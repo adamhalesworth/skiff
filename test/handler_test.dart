@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:skiff/src/commands/command.dart';
-import 'package:skiff/src/commands/command_handler.dart';
-import 'package:skiff/src/commands/command_result.dart';
+import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
-class StubCommand implements Command {
+class StubCommand implements Request<RequestResult> {
   final String username;
   final String password;
 
@@ -15,16 +13,16 @@ class StubCommand implements Command {
   String toString() => '$username, ${"*" * password.length}';
 }
 
-class StubHandler implements CommandHandler<StubCommand> {
+class StubHandler implements Handler<StubCommand, RequestResult> {
   bool _shouldFail = false;
 
   void fail() => _shouldFail = true;
 
   @override
-  Future<CommandResult> execute(StubCommand command) {
+  Future<RequestResult> execute(StubCommand command) {
     return _shouldFail
-        ? Future.value(CommandResult.failed(message: 'Something went wrong'))
-        : Future.value(CommandResult.succeeded());
+        ? Future.value(RequestResult.failed(message: 'Something went wrong'))
+        : Future.value(RequestResult.succeeded());
   }
 }
 

@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:skiff/src/handler.dart';
-import 'package:skiff/src/queries/query.dart';
+import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
-class StrangerThingsCharacters extends Query {}
+class StrangerThingsCharacters extends Request {}
 
 void main() {
   test('.execute() executes the given operation', () async {
