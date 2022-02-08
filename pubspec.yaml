@@ -1,8 +1,7 @@
 name: skiff
 version: 0.2.0
 description: >-
-  A lightweight, Future-based library for expressing CQRS principles in Dart
-  projects.
+  A lightweight Mediator implementation for Dart projects.
 homepage: https://github.com/thisdarktao/skiff
 environment:
   sdk: ">=2.12.0 <3.0.0"

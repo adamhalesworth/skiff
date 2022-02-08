@@ -23,7 +23,7 @@ void main() async {
   var query = FetchCharacters();
 
   var charactersHandler =
-      FuncHandler<FetchCharacters, FetchCharactersResult>((command) {
+      FuncHandler<FetchCharacters, FetchCharactersResult>((r) {
     return Future.value(FetchCharactersResult([
       'Eleven',
       'Mike Wheeler',
@@ -41,8 +41,7 @@ void main() async {
 
   var command = Authenticate('alexei@starcourtmall.com', 'pa55w0rd');
 
-  var authenticationHandler =
-      FuncHandler<Authenticate, RequestResult>((command) {
+  var authenticationHandler = FuncHandler<Authenticate, RequestResult>((r) {
     return Future.value(RequestResult.succeeded());
   });
 

@@ -12,10 +12,10 @@ void main() {
     });
 
     test('asFuture returns a completed future', () async {
-      var commandFuture =
+      var requestFuture =
           await RequestResult.failed(message: 'Something happened').asFuture();
 
-      expect(commandFuture.message, equals('Something happened'));
+      expect(requestFuture.message, equals('Something happened'));
     });
   });
 }

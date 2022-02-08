@@ -3,29 +3,29 @@ import 'dart:async';
 import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
-import 'handler_test.dart';
+import 'helpers/stub_handler.dart';
 
 void main() {
-  FuncHandler<StubCommand, RequestResult>? stubCommandHandler;
+  FuncHandler<StubRequest, RequestResult>? stubRequestHandler;
 
-  Mediator? sut;
+  late Mediator sut;
 
   setUp(() {
-    stubCommandHandler = FuncHandler<StubCommand, RequestResult>(
+    stubRequestHandler = FuncHandler<StubRequest, RequestResult>(
         (c) => Future.value(RequestResult.succeeded()));
 
     sut = Mediator();
   });
 
-  group('Mediator', () {
+  group('Mediator: ', () {
     group('.addHandler', () {
       test('throws exception if handler already exists', () {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        const expectedMessage = 'A handler already exists for StubCommand';
+        const expectedMessage = 'A handler already exists for StubRequest';
 
         expect(
-            () => sut!.addHandler<StubCommand>(stubCommandHandler!),
+            () => sut.addHandler<StubRequest>(stubRequestHandler!),
             throwsA(
               isA<AlreadyRegisteredException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -33,8 +33,8 @@ void main() {
       });
 
       test('adds a handler for the given request type', () {
-        sut!.addHandler(stubCommandHandler!);
-        expect(sut!.handlers.length, 1);
+        sut.addHandler(stubRequestHandler!);
+        expect(sut.handlers.length, 1);
       });
     });
 
@@ -43,7 +43,7 @@ void main() {
         const expectedMessage = 'Missing required request type';
 
         expect(
-            () => sut!.removeHandler(),
+            () => sut.removeHandler(),
             throwsA(
               isA<RequestTypeMissingException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -51,10 +51,10 @@ void main() {
       });
 
       test('throws exception if handler is missing', () {
-        const expectedMessage = 'Handler missing for StubCommand';
+        const expectedMessage = 'Handler missing for StubRequest';
 
         expect(
-            () => sut!.removeHandler<StubCommand>(),
+            () => sut.removeHandler<StubRequest>(),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -62,23 +62,23 @@ void main() {
       });
 
       test('removes handler for the given request type', () {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        var removedHandler = sut!.removeHandler<StubCommand>();
+        var removedHandler = sut.removeHandler<StubRequest>();
 
-        expect(removedHandler, equals(stubCommandHandler));
-        expect(sut!.handlers.length, 0);
+        expect(removedHandler, equals(stubRequestHandler));
+        expect(sut.handlers.length, 0);
       });
     });
 
     group('.dispatch', () {
       test('throws exception if handler is missing', () {
-        const expectedMessage = 'Handler missing for StubCommand';
+        const expectedMessage = 'Handler missing for StubRequest';
 
-        var stubCommand = StubCommand('empty', 'empty');
+        var stubRequest = StubRequest('empty', 'empty');
 
         expect(
-            () => sut!.dispatch<RequestResult>(stubCommand),
+            () => sut.dispatch<RequestResult>(stubRequest),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -86,9 +86,9 @@ void main() {
       });
 
       test('calls the handler and returns a response', () async {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        var response = await sut!.dispatch(StubCommand('', ''));
+        var response = await sut.dispatch(StubRequest('', ''));
 
         expect(response.isSuccessful, isTrue);
       });

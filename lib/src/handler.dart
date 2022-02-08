@@ -13,7 +13,7 @@ abstract class Handler<R extends Request, Rs> {
   Future<Rs> execute(R request);
 }
 
-typedef ExecuteCommand<R, Rs> = Future<Rs> Function(R);
+typedef ExecuteRequest<R, Rs> = Future<Rs> Function(R);
 
 /// A [Handler] that has its work to perform defined via a function.
 ///
@@ -21,7 +21,7 @@ typedef ExecuteCommand<R, Rs> = Future<Rs> Function(R);
 /// should probably be replaced with a concrete [Handler] subclass which
 /// better expresses your intent.
 class FuncHandler<R extends Request, Rs> implements Handler<R, Rs> {
-  final ExecuteCommand<R, Rs> _fn;
+  final ExecuteRequest<R, Rs> _fn;
 
   FuncHandler(this._fn);
 

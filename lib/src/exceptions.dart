@@ -10,7 +10,7 @@ abstract class MediatorException implements Exception {
 }
 
 /// Exception thrown when attempting to add a handler without supplying a
-/// request type that the handler is tied to.
+/// request type that the handler is associated with.
 class RequestTypeMissingException extends MediatorException {
   RequestTypeMissingException() : super('Missing required request type');
 }

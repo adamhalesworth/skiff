@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
-class StrangerThingsCharacters extends Request {}
+class FetchStrangerThingsCharacters extends Request {}
 
 void main() {
   test('.execute() executes the given operation', () async {
     var sut =
-        FuncHandler<StrangerThingsCharacters, List<String>>((query) async {
+        FuncHandler<FetchStrangerThingsCharacters, List<String>>((request) async {
       return Future.value(['Jim Hopper', 'Joyce Byers', 'Steve Harrington']);
     });
 
-    var result = await sut.execute(StrangerThingsCharacters());
+    var result = await sut.execute(FetchStrangerThingsCharacters());
 
     expect(result.length, equals(3));
   });
