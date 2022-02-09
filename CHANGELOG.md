@@ -5,6 +5,8 @@
 This version signals a change in the direction of this package.
 
 - Removes CQRS nomenclature and classes in favour of a cleaner API that doesn't model a specific pattern.
+- `Mediator` can now broadcast events to listeners, just like an event bus.
+- `Mediator` can now be disposed to prevent further interaction.
 
 ## 0.2.0
 

@@ -9,3 +9,5 @@ dev_dependencies:
   test: ^1.17.10
   meta: ^1.7.0
   lints: ^1.0.1
+  mocktail: ^0.2.0
+  fake_async: ^1.2.0
