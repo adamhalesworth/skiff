@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fake_async/fake_async.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:skiff/skiff.dart';
+import 'package:skiff/src/stream_registration.dart';
 import 'package:test/test.dart';
 
 import 'helpers/mock_event_callback.dart';
@@ -102,17 +103,17 @@ void main() {
       });
     });
 
-    group('.addListener', () {
-      test('returns a StreamSubscription', () {
-        var listener = sut.addListener((StubEvent e) {});
-        expect(listener, isA<StreamSubscription>());
+    group('.listen', () {
+      test('returns a StreamRegistration', () {
+        var listener = sut.listen((StubEvent e) {});
+        expect(listener, isA<StreamRegistration>());
       });
 
       test('creates a correctly wired-up listener', () {
         final mockListener = MockEventCallback();
-        final listener = sut.addListener<StubEvent>(mockListener);
+        final listener = sut.listen<StubEvent>(mockListener);
 
-        expect(listener, isA<StreamSubscription<StubEvent>>());
+        expect(listener, isA<StreamRegistration>());
       });
     });
 
@@ -120,7 +121,7 @@ void main() {
       test('fires the listener', () {
         fakeAsync((async) {
           final mockListener = MockEventCallback();
-          sut.addListener<StubEvent>(mockListener);
+          sut.listen<StubEvent>(mockListener);
 
           sut.broadcast(StubEvent());
 
@@ -137,7 +138,7 @@ void main() {
           sut.dispose();
 
           expect(
-              () => sut.addListener((e) {}),
+              () => sut.listen((e) {}),
               throwsA(isA<StateError>().having((e) => e.message, 'message',
                   "Cannot add listener after disposal")));
         });

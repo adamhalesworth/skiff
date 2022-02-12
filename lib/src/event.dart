@@ -1,2 +1,2 @@
-// A marker interface for events.
+/// A marker interface for events.
 abstract class Event {}

@@ -5,10 +5,13 @@ import 'bus.dart';
 import 'event.dart';
 import 'exceptions.dart';
 import 'handler.dart';
+import 'registration.dart';
 import 'relay.dart';
 import 'request.dart';
+import 'stream_registration.dart';
 
-/// Promotes loose coupling between caller and callees.
+/// Promotes loose coupling between caller and callees by orchestrating the
+/// dispatch of [Request] or [Event] objects.
 class Mediator implements Bus, Relay {
   final Map<Type, Handler> _handlers = {};
   final StreamController<Event> _events = StreamController.broadcast();
@@ -28,9 +31,10 @@ class Mediator implements Bus, Relay {
   }
 
   @override
-  StreamSubscription<E> addListener<E extends Event>(Function(E) fn) {
+  Registration listen<E extends Event>(Function(E) fn) {
     _throwBadStateIfDisposed("add listener");
-    return _events.stream.where((e) => e.runtimeType == E).cast<E>().listen(fn);
+    return StreamRegistration(
+        _events.stream.where((e) => e.runtimeType == E).cast<E>().listen(fn));
   }
 
   @override
