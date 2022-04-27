@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'request.dart';
+import 'package:skiff/src/request.dart';
 
 /// Defines an abstract handler
 abstract class Handler<R extends Request, Rs> {

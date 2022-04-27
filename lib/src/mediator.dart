@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'bus.dart';
-import 'event.dart';
-import 'exceptions.dart';
-import 'handler.dart';
-import 'registration.dart';
-import 'relay.dart';
-import 'request.dart';
-import 'stream_registration.dart';
+import 'package:skiff/src/bus.dart';
+import 'package:skiff/src/event.dart';
+import 'package:skiff/src/exceptions.dart';
+import 'package:skiff/src/handler.dart';
+import 'package:skiff/src/registration.dart';
+import 'package:skiff/src/relay.dart';
+import 'package:skiff/src/request.dart';
+import 'package:skiff/src/stream_registration.dart';
 
 /// Promotes loose coupling between caller and callees by orchestrating the
 /// dispatch of [Request] or [Event] objects.

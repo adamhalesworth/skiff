@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import 'handler.dart';
-import 'request.dart';
+import 'package:skiff/src/handler.dart';
+import 'package:skiff/src/request.dart';
 
 /// Takes a [Request] and passes it to an appropriate [Handler].
 abstract class Relay {

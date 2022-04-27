@@ -1,5 +1,5 @@
-import 'event.dart';
-import 'registration.dart';
+import 'package:skiff/src/event.dart';
+import 'package:skiff/src/registration.dart';
 
 /// Takes an [Event] and passes it to any registered listeners.
 abstract class Bus {
