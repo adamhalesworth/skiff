@@ -1,20 +1,27 @@
 import 'dart:async';
 
+import 'package:fake_async/fake_async.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:skiff/skiff.dart';
-import 'package:skiff/src/exceptions.dart';
-import 'package:skiff/src/handler.dart';
+import 'package:skiff/src/stream_registration.dart';
 import 'package:test/test.dart';
 
-import 'handler_test.dart';
+import 'helpers/mock_event_callback.dart';
+import 'helpers/stub_event.dart';
+import 'helpers/stub_handler.dart';
 
 void main() {
-  FuncHandler<StubCommand, CommandResult>? stubCommandHandler;
+  FuncHandler<StubRequest, RequestResult>? stubRequestHandler;
 
-  Mediator? sut;
+  late Mediator sut;
+
+  setUpAll(() {
+    registerFallbackValue(StubEvent());
+  });
 
   setUp(() {
-    stubCommandHandler = FuncHandler<StubCommand, CommandResult>(
-        (c) => Future.value(CommandResult.succeeded()));
+    stubRequestHandler = FuncHandler<StubRequest, RequestResult>(
+        (c) => Future.value(RequestResult.succeeded()));
 
     sut = Mediator();
   });
@@ -22,12 +29,12 @@ void main() {
   group('Mediator', () {
     group('.addHandler', () {
       test('throws exception if handler already exists', () {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        const expectedMessage = 'A handler already exists for StubCommand';
+        const expectedMessage = 'A handler already exists for StubRequest';
 
         expect(
-            () => sut!.addHandler<StubCommand>(stubCommandHandler!),
+            () => sut.addHandler<StubRequest>(stubRequestHandler!),
             throwsA(
               isA<AlreadyRegisteredException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -35,8 +42,8 @@ void main() {
       });
 
       test('adds a handler for the given request type', () {
-        sut!.addHandler(stubCommandHandler!);
-        expect(sut!.handlers.length, 1);
+        sut.addHandler(stubRequestHandler!);
+        expect(sut.handlers.length, 1);
       });
     });
 
@@ -45,7 +52,7 @@ void main() {
         const expectedMessage = 'Missing required request type';
 
         expect(
-            () => sut!.removeHandler(),
+            () => sut.removeHandler(),
             throwsA(
               isA<RequestTypeMissingException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -53,10 +60,10 @@ void main() {
       });
 
       test('throws exception if handler is missing', () {
-        const expectedMessage = 'Handler missing for StubCommand';
+        const expectedMessage = 'Handler missing for StubRequest';
 
         expect(
-            () => sut!.removeHandler<StubCommand>(),
+            () => sut.removeHandler<StubRequest>(),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -64,23 +71,23 @@ void main() {
       });
 
       test('removes handler for the given request type', () {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        var removedHandler = sut!.removeHandler<StubCommand>();
+        var removedHandler = sut.removeHandler<StubRequest>();
 
-        expect(removedHandler, equals(stubCommandHandler));
-        expect(sut!.handlers.length, 0);
+        expect(removedHandler, equals(stubRequestHandler));
+        expect(sut.handlers.length, 0);
       });
     });
 
     group('.dispatch', () {
       test('throws exception if handler is missing', () {
-        const expectedMessage = 'Handler missing for StubCommand';
+        const expectedMessage = 'Handler missing for StubRequest';
 
-        var stubCommand = StubCommand('empty', 'empty');
+        var stubRequest = StubRequest('empty', 'empty');
 
         expect(
-            () => sut!.dispatch<CommandResult>(stubCommand),
+            () => sut.dispatch<RequestResult>(stubRequest),
             throwsA(
               isA<MissingHandlerException>()
                   .having((e) => e.message, 'message', equals(expectedMessage)),
@@ -88,11 +95,89 @@ void main() {
       });
 
       test('calls the handler and returns a response', () async {
-        sut!.addHandler<StubCommand>(stubCommandHandler!);
+        sut.addHandler<StubRequest>(stubRequestHandler!);
 
-        var response = await sut!.dispatch<CommandResult>(StubCommand('', ''));
+        var response = await sut.dispatch(StubRequest('', ''));
 
         expect(response.isSuccessful, isTrue);
+      });
+    });
+
+    group('.listen', () {
+      test('returns a StreamRegistration', () {
+        var listener = sut.listen((StubEvent e) {});
+        expect(listener, isA<StreamRegistration>());
+      });
+
+      test('creates a correctly wired-up listener', () {
+        final mockListener = MockEventCallback();
+        final listener = sut.listen<StubEvent>(mockListener);
+
+        expect(listener, isA<StreamRegistration>());
+      });
+    });
+
+    group('.broadcast', () {
+      test('fires the listener', () {
+        fakeAsync((async) {
+          final mockListener = MockEventCallback();
+          sut.listen<StubEvent>(mockListener);
+
+          sut.broadcast(StubEvent());
+
+          async.flushMicrotasks();
+
+          verify(() => mockListener(any())).called(1);
+        });
+      });
+    });
+
+    group('.dispose', () {
+      group('causes a StateError when', () {
+        test('adding a listener', () {
+          sut.dispose();
+
+          expect(
+              () => sut.listen((e) {}),
+              throwsA(isA<StateError>().having((e) => e.message, 'message',
+                  "Cannot add listener after disposal")));
+        });
+
+        test('adding a handler', () {
+          sut.dispose();
+
+          expect(
+              () => sut.addHandler(StubHandler()),
+              throwsA(isA<StateError>().having((e) => e.message, 'message',
+                  "Cannot add handler after disposal")));
+        });
+
+        test('removing a handler', () {
+          sut.dispose();
+
+          expect(
+              () => sut.removeHandler<StubRequest>(),
+              throwsA(isA<StateError>().having((e) => e.message, 'message',
+                  "Cannot remove handler after disposal")));
+        });
+
+        test('dispatching a request', () {
+          sut.dispose();
+
+          expect(
+              () => sut.dispatch(StubRequest('', '')),
+              throwsA(isA<StateError>().having((e) => e.message, 'message',
+                  "Cannot dispatch after disposal")));
+        });
+
+        test('broadcasting an event', () {
+          sut.dispose();
+
+          expect(
+              () => sut.broadcast(StubEvent()),
+              throwsA(isA<StateError>().having((e) => e.message, 'message',
+                  "Cannot broadcast after disposal")));
+        });
       });
     });
   });

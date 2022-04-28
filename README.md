@@ -1,12 +1,21 @@
 # Skiff
 
-A lightweight, Future-based library for expressing CQRS principles in Dart
-projects.
+A lightweight Mediator implementation for Dart projects.
 
 This package allows you to write smaller, more robust and testable code by
-turning data access (or anything else you can think of) logic into first-class
+turning data access logic (or anything else you can think of) into first-class
 objects with sound typing.
 
-## CQRS+ES
+## Installing
 
-CQRS fits very nicely with Event Sourcing, which is not covered by this package.
+With Dart:
+
+```
+ $ dart pub add skiff
+```
+
+With Flutter:
+
+```
+ $ flutter pub add skiff
+```

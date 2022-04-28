@@ -1,19 +1,18 @@
 import 'dart:async';
 
-import 'package:skiff/src/handler.dart';
-import 'package:skiff/src/queries/query.dart';
+import 'package:skiff/skiff.dart';
 import 'package:test/test.dart';
 
-class StrangerThingsCharacters extends Query {}
+class FetchStrangerThingsCharacters extends Request {}
 
 void main() {
   test('.execute() executes the given operation', () async {
-    var sut =
-        FuncHandler<StrangerThingsCharacters, List<String>>((query) async {
+    var sut = FuncHandler<FetchStrangerThingsCharacters, List<String>>(
+        (request) async {
       return Future.value(['Jim Hopper', 'Joyce Byers', 'Steve Harrington']);
     });
 
-    var result = await sut.execute(StrangerThingsCharacters());
+    var result = await sut.execute(FetchStrangerThingsCharacters());
 
     expect(result.length, equals(3));
   });

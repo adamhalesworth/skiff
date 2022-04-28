@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0
+
+This version signals a change in the direction of this package. The CQRS nomenclature
+and classes have been removed in favour of a cleaner API that doesn't model a specific
+pattern.
+
+### Added
+
+- `Mediator` can now broadcast events to listeners.
+- `Bus` and `Relay` classes.
+- `RequestResult`
+
+### Removed
+
+- `Command`, `CommandHandler`, `CommandResult`
+- `Query` and `QueryHandler`
+
+### Changed
+
+- `Mediator` can now be disposed to prevent further interaction.
+
 ## 0.2.0
 
 ### Added
