@@ -1,5 +1,5 @@
 name: skiff
-version: 0.2.0
+version: 0.3.0
 description: >-
   A lightweight Mediator implementation for Dart projects.
 homepage: https://github.com/thisdarktao/skiff
