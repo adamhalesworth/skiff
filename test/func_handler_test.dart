@@ -7,8 +7,8 @@ class FetchStrangerThingsCharacters extends Request {}
 
 void main() {
   test('.execute() executes the given operation', () async {
-    var sut =
-        FuncHandler<FetchStrangerThingsCharacters, List<String>>((request) async {
+    var sut = FuncHandler<FetchStrangerThingsCharacters, List<String>>(
+        (request) async {
       return Future.value(['Jim Hopper', 'Joyce Byers', 'Steve Harrington']);
     });
 
